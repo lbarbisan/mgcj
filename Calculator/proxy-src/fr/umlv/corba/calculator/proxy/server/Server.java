@@ -33,6 +33,7 @@ import fr.umlv.corba.calculator.proxy.impl.CalculatorImpl;
  */
 public class Server {
 
+	private static final String DEFAULT_APPLET_ID = "000102030405";
 	private static CFlex32CardService javacard = null;
 	
 	public static void main(String[] args) throws Exception {
@@ -46,9 +47,9 @@ public class Server {
 		NamingContextExt context = NamingContextExtHelper.narrow(orb.resolve_initial_references("NameService"));
 
 		//on demarre l'applet
-		startApplet("000102030405");
-		Servant calculator = new CalculatorImpl(javacard);
-		byte[] servantID = rootPOA.activate_object(calculator);
+		startApplet(DEFAULT_APPLET_ID);
+		Servant servant = new CalculatorImpl(javacard);
+		byte[] servantID = rootPOA.activate_object(servant);
 
 		NameComponent[] name = context.to_name("Calculator");
 		context.rebind(name, rootPOA.id_to_reference(servantID));
