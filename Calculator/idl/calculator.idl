@@ -1,0 +1,10 @@
+module proxy {
+	interface CorbaCalculator {
+		void push(in short value);
+		short pop();
+		void add();
+		void minus();
+		void mult();
+		void div();
+	};
+};
