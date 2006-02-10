@@ -67,7 +67,7 @@ public class _CorbaCalculatorStub extends org.omg.CORBA.portable.ObjectImpl impl
             }
   } // add
 
-  public void minus ()
+  public void sub ()
   {
             org.omg.CORBA.portable.InputStream $in = null;
             try {
@@ -79,7 +79,7 @@ public class _CorbaCalculatorStub extends org.omg.CORBA.portable.ObjectImpl impl
                 String _id = $ex.getId ();
                 throw new org.omg.CORBA.MARSHAL (_id);
             } catch (org.omg.CORBA.portable.RemarshalException $rm) {
-                minus (        );
+                sub (        );
             } finally {
                 _releaseReply ($in);
             }

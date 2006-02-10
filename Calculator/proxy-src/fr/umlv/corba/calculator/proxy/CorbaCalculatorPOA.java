@@ -62,7 +62,7 @@ public abstract class CorbaCalculatorPOA extends org.omg.PortableServer.Servant
 
        case 3:  // proxy/CorbaCalculator/minus
        {
-         this.minus ();
+         this.sub ();
          out = $rh.createReply();
          break;
        }

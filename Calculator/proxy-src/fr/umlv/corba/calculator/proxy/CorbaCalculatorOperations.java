@@ -13,7 +13,7 @@ public interface CorbaCalculatorOperations
   void push (short value);
   short pop ();
   void add ();
-  void minus ();
+  void sub ();
   void mult ();
   void div ();
 } // interface CorbaCalculatorOperations
