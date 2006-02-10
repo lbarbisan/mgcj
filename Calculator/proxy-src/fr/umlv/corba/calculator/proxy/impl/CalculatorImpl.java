@@ -113,12 +113,7 @@ public class CalculatorImpl extends CorbaCalculatorPOA {
 		} catch (CardTerminalException e) {
 			e.printStackTrace();
 		}
-//		try {
-//			result = javacard.sendAPDU(new ISOCommandAPDU(Calculator.CALCULATOR_CLA,
-//					Calculator.DIV, ZERO, ZERO, new byte[0], 0));
-//		} catch (CardTerminalException e) {
-//			e.printStackTrace();
-//		}
+
 	}
 
 	/* (non-Javadoc)
