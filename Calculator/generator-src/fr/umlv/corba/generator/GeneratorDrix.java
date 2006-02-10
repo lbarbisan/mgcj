@@ -18,7 +18,7 @@ import fr.umlv.corba.calculator.proxy.impl.CalculatorImpl;
 
 import opencard.cflex.service.CFlex32CardService;
 
-public class Generator {
+public class GeneratorDrix {
 	
 	public final static String POA = "POA";
 	public final static String PACKAGE_IMPL_SUFFIX = "Impl";
@@ -31,7 +31,7 @@ public class Generator {
 	
 	private PrintStream printer = new PrintStream(System.out);
 	
-	public Generator(Class classe) {
+	public GeneratorDrix(Class classe) {
 		this.name = classe.getSimpleName();
 		this.realName = name.substring(0,name.length()-OPERATIONS_STRING.length());
 		this.packageName = classe.getName().substring(0,classe.getName().lastIndexOf('.'));
@@ -115,7 +115,7 @@ public class Generator {
 				}
 				prototype = prototype.substring(0,prototype.lastIndexOf(","));
 			}
-			prototype+=" {\n}";
+			//prototype+=" {\n}";
 			list.add(prototype);
 		}
 		return list;
@@ -159,17 +159,17 @@ public class Generator {
 	 */
 	public static void main(String[] args) {
 		try {
-			Generator generator = new Generator(Class.forName("fr.umlv.corba.calculator.proxy.CorbaCalculatorOperations"));
+			GeneratorDrix generator = new GeneratorDrix(Class.forName("fr.umlv.corba.calculator.proxy.CorbaCalculatorOperations"));
 			//System.out.println("Classe: " + generator.name);
 			//System.out.println("Package: " + generator.packageName);
-			generator.generateProxyServerSkeleton();
-//			for (Iterator iter = generator.getImplMethods().iterator(); iter.hasNext();) {
-//				System.out.println(iter.next());
-//			}
+			//generator.generateProxyServerSkeleton();
+			for (Iterator iter = generator.getImplMethods().iterator(); iter.hasNext();) {
+				System.out.println(iter.next());
+			}
 			
-//			for (Iterator iter = generator.getAppletMethods().iterator(); iter.hasNext();) {
-//				System.out.println(iter.next());
-//			}
+			for (Iterator iter = generator.getAppletMethods().iterator(); iter.hasNext();) {
+				System.out.println(iter.next());
+			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
