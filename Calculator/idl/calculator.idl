@@ -3,7 +3,7 @@ module proxy {
 		void push(in short value);
 		short pop();
 		void add();
-		void minus();
+		void sub();
 		void mult();
 		void div();
 	};
