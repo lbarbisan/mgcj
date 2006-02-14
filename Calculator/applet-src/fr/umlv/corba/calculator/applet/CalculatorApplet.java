@@ -55,8 +55,8 @@ public class CalculatorApplet extends Applet implements Calculator {
 		case Calculator.ADD:
 			add(apdu);
 			break;
-		case Calculator.MINUS:
-			minus(apdu);
+		case Calculator.SUB:
+			sub(apdu);
 			break;
 		case Calculator.MULT:
 			mult(apdu);
@@ -90,8 +90,6 @@ public class CalculatorApplet extends Applet implements Calculator {
 	public void pop(APDU apdu) {
 		byte[] buffer = apdu.getBuffer();
 		
-		//byte byteRead = buffer[ISO7816.OFFSET_LC];
-		
 		short value = stack.pop();
 		byte [] TheBuffer = Util.ShortToBytePair(value);
 		
@@ -104,7 +102,7 @@ public class CalculatorApplet extends Applet implements Calculator {
 		apdu.setOutgoingLength((byte)TheBuffer.length); 
 
 		// move the data into the APDU buffer starting at offset 0		
-		for (byte index = 0; index <= TheBuffer.length; index++) 
+		for (byte index = 0; index < TheBuffer.length; index++)
 			buffer[index] = TheBuffer[(byte)(index)];
 		
 		// send the numbers of bytes of data at offset 0 in the APDU buffer
@@ -132,17 +130,6 @@ public class CalculatorApplet extends Applet implements Calculator {
 	}
 	
 	public void add(APDU apdu) {
-		
-		// indicate that this APDU has incoming data and
-		// receive data starting from the offset 
-		// ISO7816.OFFSET_CDATA
-		byte byteRead = (byte)(apdu.setIncomingAndReceive()); 
-
-		// it is an error if the number of data bytes read does not 
-		// match the number in Lc byte
-		if (byteRead != (byte) 0) 
-			ISOException.throwIt(ISO7816.SW_WRONG_LENGTH); 
-
 		if(stack.isEmpty() || stack.size()<MIN_OPERATORS) {
 			ISOException.throwIt(ISO7816.SW_CONDITIONS_NOT_SATISFIED);
 		}
@@ -155,18 +142,7 @@ public class CalculatorApplet extends Applet implements Calculator {
 		return; 
 	}
 
-	public void minus(APDU apdu) {
-		
-		// indicate that this APDU has incoming data and
-		// receive data starting from the offset 
-		// ISO7816.OFFSET_CDATA
-		byte byteRead = (byte)(apdu.setIncomingAndReceive()); 
-
-		// it is an error if the number of data bytes read does not 
-		// match the number in Lc byte
-		if (byteRead != (byte) 0) 
-			ISOException.throwIt(ISO7816.SW_WRONG_LENGTH); 
-
+	public void sub(APDU apdu) {
 		if(stack.isEmpty() || stack.size()<MIN_OPERATORS) {
 			ISOException.throwIt(ISO7816.SW_CONDITIONS_NOT_SATISFIED);
 		}
@@ -180,41 +156,22 @@ public class CalculatorApplet extends Applet implements Calculator {
 	}
 	
 	public void div(APDU apdu) {
-		
-		// indicate that this APDU has incoming data and
-		// receive data starting from the offset 
-		// ISO7816.OFFSET_CDATA
-		byte byteRead = (byte)(apdu.setIncomingAndReceive()); 
-
-		// it is an error if the number of data bytes read does not 
-		// match the number in Lc byte
-		if (byteRead != (byte) 0) 
-			ISOException.throwIt(ISO7816.SW_WRONG_LENGTH); 
-
 		if(stack.isEmpty() || stack.size()<MIN_OPERATORS) {
 			ISOException.throwIt(ISO7816.SW_CONDITIONS_NOT_SATISFIED);
 		}
 		
 		short first = stack.pop();
 		short second = stack.pop();
+		if(first == (short)0) {
+			ISOException.throwIt(ISO7816.SW_CONDITIONS_NOT_SATISFIED);
+		}
 		stack.push((short)(second/first));
-
+		
 		// return successfully
 		return; 
 	}
 	
 	public void mult(APDU apdu) {
-		
-		// indicate that this APDU has incoming data and
-		// receive data starting from the offset 
-		// ISO7816.OFFSET_CDATA
-		byte byteRead = (byte)(apdu.setIncomingAndReceive()); 
-
-		// it is an error if the number of data bytes read does not 
-		// match the number in Lc byte
-		if (byteRead != (byte) 0) 
-			ISOException.throwIt(ISO7816.SW_WRONG_LENGTH); 
-
 		if(stack.isEmpty() || stack.size()<MIN_OPERATORS) {
 			ISOException.throwIt(ISO7816.SW_CONDITIONS_NOT_SATISFIED);
 		}
