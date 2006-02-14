@@ -35,12 +35,8 @@ public class CalculatorImpl extends CorbaCalculatorPOA {
 	 */
 	public void push(short value) {
 		byte[] byteValue = Util.ShortToBytePair(value);
-		System.err.println(byteValue);
-		
 		try {
-			result = javacard.sendAPDU(new ISOCommandAPDU(Calculator.CALCULATOR_CLA,
-					Calculator.SET, ZERO, ZERO, byteValue,
-					byteValue.length));
+			sendAPDU(Calculator.SET,byteValue,byteValue.length);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -51,9 +47,7 @@ public class CalculatorImpl extends CorbaCalculatorPOA {
 	 */
 	public short pop() {
 		try {
-			byte[] bs = BYTE;
-			result = javacard.sendAPDU(new ISOCommandAPDU(Calculator.CALCULATOR_CLA,
-					Calculator.GET, ZERO, ZERO, bs, 2));
+			sendAPDU(Calculator.GET,BYTE,2);
 		} catch (CardTerminalException e) {
 			e.printStackTrace();
 		}
@@ -68,22 +62,20 @@ public class CalculatorImpl extends CorbaCalculatorPOA {
 	 */
 	public void add() {
 		try {
-			result = javacard.sendAPDU(new ISOCommandAPDU(Calculator.CALCULATOR_CLA,
-					Calculator.ADD, ZERO, ZERO, BYTE, 0));
-		} catch (CardTerminalException e) {
-			e.printStackTrace();
+			sendAPDU(Calculator.ADD,BYTE,0);
+		} catch (CardTerminalException e1) {
+			e1.printStackTrace();
 		}
 	}
 
 	/* (non-Javadoc)
 	 * @see fr.umlv.corba.calculator.client.CalculatorOperations#minus()
 	 */
-	public void minus() {
+	public void sub() {
 		try {
-			result = javacard.sendAPDU(new ISOCommandAPDU(Calculator.CALCULATOR_CLA,
-					Calculator.MINUS, ZERO, ZERO, BYTE, 0));
-		} catch (CardTerminalException e) {
-			e.printStackTrace();
+			sendAPDU(Calculator.SUB,BYTE,0);
+		} catch (CardTerminalException e1) {
+			e1.printStackTrace();
 		}
 	}
 
@@ -96,12 +88,6 @@ public class CalculatorImpl extends CorbaCalculatorPOA {
 		} catch (CardTerminalException e) {
 			e.printStackTrace();
 		}
-//		try {
-//			result = javacard.sendAPDU(new ISOCommandAPDU(Calculator.CALCULATOR_CLA,
-//					Calculator.MULT, ZERO, ZERO, BYTE, 0));
-//		} catch (CardTerminalException e) {
-//			e.printStackTrace();
-//		}
 	}
 
 	/* (non-Javadoc)
@@ -112,8 +98,7 @@ public class CalculatorImpl extends CorbaCalculatorPOA {
 			sendAPDU(Calculator.DIV, BYTE,0);
 		} catch (CardTerminalException e) {
 			e.printStackTrace();
-		}
-
+		} 
 	}
 
 	/* (non-Javadoc)
