@@ -14,7 +14,7 @@ public interface Calculator {
 
 	final static byte ADD = (byte) 0x30;
 
-	final static byte MINUS = (byte) 0x40;
+	final static byte SUB = (byte) 0x40;
 
 	final static byte MULT = (byte) 0x50;
 
@@ -30,7 +30,7 @@ public interface Calculator {
 
 	void add(APDU apdu);
 
-	void minus(APDU apdu);
+	void sub(APDU apdu);
 
 	void mult(APDU apdu);
 
