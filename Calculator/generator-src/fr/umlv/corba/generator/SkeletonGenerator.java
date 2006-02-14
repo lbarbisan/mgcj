@@ -28,7 +28,13 @@ public class SkeletonGenerator {
 	}
 	
 	private void generateProxySkeleton(String interfaceName) {
-		Class.forName(interfaceName).getDeclaredMethods();
+		try {
+			Class.forName(interfaceName).getDeclaredMethods();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void generateAppletSkeleton(String interfaceName) {

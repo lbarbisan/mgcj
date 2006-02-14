@@ -1,24 +1,21 @@
 package fr.umlv.corba.generator;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class CorbaProxyGenerator extends GeneratorImp {
+public class CorbaProxyGenerator implements Generator {
 	
-	private final static String TEMPLATE_NAME = "proxyTemplate.ftl";
 	private final static String IMPORTS = "imports";
 	private final static String PACKAGE = "package";
-	private final static String CLASS = "class";
+	//private final static String CLASS = "class";
 	
-	public Map <String, Object> getValues(Class klass) {
+	public Map <String, Object> getValues() {
 		Map <String, Object> values = new HashMap <String, Object> ();
 
 		// Class
-		values.put(CLASS, klass);
+		//values.put(CLASS, klass);
 		
 		// Package
 		values.put(PACKAGE, "pakageA");

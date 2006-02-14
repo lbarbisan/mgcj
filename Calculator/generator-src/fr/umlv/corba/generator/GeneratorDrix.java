@@ -2,21 +2,12 @@ package fr.umlv.corba.generator;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
-
-import org.omg.CosNaming.NameComponent;
-import org.omg.PortableServer.Servant;
-
-import fr.umlv.corba.calculator.proxy.impl.CalculatorImpl;
-
-import opencard.cflex.service.CFlex32CardService;
 
 public class GeneratorDrix {
 	
