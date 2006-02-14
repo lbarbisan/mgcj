@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class CorbaProxyGenerator implements Generator {
+public class CorbaProxyGenerator_DELETE implements Generator {
 	
 	private final static String IMPORTS = "imports";
 	private final static String PACKAGE = "package";

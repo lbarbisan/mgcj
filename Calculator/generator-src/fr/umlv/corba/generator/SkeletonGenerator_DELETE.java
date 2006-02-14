@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
  * @author cedric
  *
  */
-public class SkeletonGenerator {
+public class SkeletonGenerator_DELETE {
 
 	private Method[] methods = null;
 	private Class clazz = null;

@@ -7,7 +7,7 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.TemplateException;
 
-public class GeneratorTest {
+public class GeneratorTest_DELETE {
 
 	public static void main(String[] args) throws IOException, TemplateException {
 		/* Create and adjust the configuration */

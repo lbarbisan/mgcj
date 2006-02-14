@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
 
-public class GeneratorDrix {
+public class GeneratorDrix_DELETE {
 	
 	public final static String POA = "POA";
 	public final static String PACKAGE_IMPL_SUFFIX = "Impl";
@@ -22,7 +22,7 @@ public class GeneratorDrix {
 	
 	private PrintStream printer = new PrintStream(System.out);
 	
-	public GeneratorDrix(Class classe) {
+	public GeneratorDrix_DELETE(Class classe) {
 		this.name = classe.getSimpleName();
 		this.realName = name.substring(0,name.length()-OPERATIONS_STRING.length());
 		this.packageName = classe.getName().substring(0,classe.getName().lastIndexOf('.'));
@@ -150,7 +150,7 @@ public class GeneratorDrix {
 	 */
 	public static void main(String[] args) {
 		try {
-			GeneratorDrix generator = new GeneratorDrix(Class.forName("fr.umlv.corba.calculator.proxy.CorbaCalculatorOperations"));
+			GeneratorDrix_DELETE generator = new GeneratorDrix_DELETE(Class.forName("fr.umlv.corba.calculator.proxy.CorbaCalculatorOperations"));
 			//System.out.println("Classe: " + generator.name);
 			//System.out.println("Package: " + generator.packageName);
 			//generator.generateProxyServerSkeleton();
