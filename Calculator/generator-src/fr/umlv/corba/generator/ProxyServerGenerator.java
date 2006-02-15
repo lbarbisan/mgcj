@@ -35,7 +35,6 @@ public class ProxyServerGenerator implements Generator {
 		values.put("packagePrefix",manager.getPackagePrefix());
 		values.put("className",manager.getRealName());
 		values.put("class",clazz);
-		
 		return values;
 	}
 	

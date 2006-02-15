@@ -43,6 +43,7 @@ public class GeneratorManager {
 		URL url = GeneratorManager.class.getResource("/templates");
 		try {
 			cfg.setDirectoryForTemplateLoading(new File(url.getFile()));
+			//cfg.setDirectoryForTemplateLoading(new File("C:\\templates"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -151,16 +152,18 @@ public class GeneratorManager {
 	 * 
 	 */
 	private void runServantGenerator() throws IOException, TemplateException {	
-//		/* Get or create a template */
-//		Template template = cfg.getTemplate("ProxyServantTemplate.ftl");
-//		
-//		AppletGenerator appletGenerator = new AppletGenerator(this);
-//		
-//		/* Merge data model with template */
-//		Writer out = new OutputStreamWriter(new FileOutputStream(new File("./" + appletGenerator.getName())));
-//		template.process(appletGenerator.getValues(), out);
-//		out.flush();
-//		out.close();
+		/* Get or create a template */
+		Template template = cfg.getTemplate("ProxyServantTemplate.ftl");
+		
+		ProxyServantGenerator servantGenerator = new ProxyServantGenerator(this);
+		
+		File dir = createDestination(servantGenerator.getPackageName());
+		
+		/* Merge data model with template */
+		Writer out = new OutputStreamWriter(new FileOutputStream(new File(dir,servantGenerator.getName())));
+		template.process(servantGenerator.getValues(), out);
+		out.flush();
+		out.close();
 	}
 	
 	/**
