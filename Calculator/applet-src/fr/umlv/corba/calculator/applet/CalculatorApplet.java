@@ -52,6 +52,9 @@ public class CalculatorApplet extends Applet implements Calculator {
 		case Calculator.GET:
 			pop(apdu);
 			break;
+		case Calculator.TOP:
+			top(apdu);
+			break;
 		case Calculator.ADD:
 			add(apdu);
 			break;
@@ -91,6 +94,30 @@ public class CalculatorApplet extends Applet implements Calculator {
 		byte[] buffer = apdu.getBuffer();
 		
 		short value = stack.pop();
+		byte [] TheBuffer = Util.ShortToBytePair(value);
+		
+		// inform system that the applet has finished processing
+		// the command and the system should now prepare to 
+		// construct a response APDU which contains data field
+		apdu.setOutgoing(); 
+
+		// indicate the number of bytes in the data field
+		apdu.setOutgoingLength((byte)TheBuffer.length); 
+
+		// move the data into the APDU buffer starting at offset 0		
+		for (byte index = 0; index < TheBuffer.length; index++)
+			buffer[index] = TheBuffer[(byte)(index)];
+		
+		// send the numbers of bytes of data at offset 0 in the APDU buffer
+		apdu.sendBytes((short)0, (short)TheBuffer.length); 
+		
+		return;
+	}
+	
+	public void top(APDU apdu) {
+		byte[] buffer = apdu.getBuffer();
+		
+		short value = stack.first();
 		byte [] TheBuffer = Util.ShortToBytePair(value);
 		
 		// inform system that the applet has finished processing
