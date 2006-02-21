@@ -1,10 +1,24 @@
 module proxy {
+	exception ArithmeticException {//pour la division par 0
+		string message;
+	};
+
+	exception InvalidNumberOfOperators {
+		string message;
+	};
+	
+	exception UnKnowErrorException {
+		string message;
+	};
+
 	interface CorbaCalculator {
-		void push(in short value);
-		short pop();
-		void add();
-		void sub();
-		void mult();
-		void div();
+		void push(in short value) raises (InvalidNumberOfOperators,UnKnowErrorException);
+		short pop() raises (InvalidNumberOfOperators, UnKnowErrorException);
+		short top() raises (InvalidNumberOfOperators, UnKnowErrorException);
+		void add() raises (InvalidNumberOfOperators, UnKnowErrorException);
+		void sub() raises (InvalidNumberOfOperators, UnKnowErrorException);
+		void mult() raises (InvalidNumberOfOperators, UnKnowErrorException);
+		void div() raises (InvalidNumberOfOperators, ArithmeticException, UnKnowErrorException);
+		void reset();
 	};
 };
