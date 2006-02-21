@@ -19,6 +19,8 @@ public interface Calculator {
 	final static byte MULT = (byte) 0x50;
 
 	final static byte DIV = (byte) 0x60;
+	
+	final static byte TOP = (byte) 0x70;
 
 	final static byte SELECT = (byte) 0xA4;
 	
