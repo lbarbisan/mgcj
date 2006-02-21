@@ -24,29 +24,31 @@ public class GeneratorManager {
 	private String realName;
 	private String packageName;
 	private String packagePrefix;
+	
 	private String destination;
 	private File dest;
 	private Configuration cfg;
 	
-	public GeneratorManager(Class clazz,String destination) {
+	public GeneratorManager(Class clazz,String destination,String packagePrefix) {
 		this.clazz = clazz;
 		this.name = clazz.getSimpleName();
 		this.destination = destination;
-		initGenerator();
+		initGenerator(packagePrefix);
 	}
 	
-	private void initGenerator() {
+	private void initGenerator(String packagePrefix) {
 		setRealName();
-		setPackageName();
+		setPackageName(packagePrefix);
 		
 		cfg = new Configuration();
-		URL url = GeneratorManager.class.getResource("/templates");
+		//TODO mettre le nom du repertoire des templates dans un fichie properties
+		URL url = GeneratorManager.class.getResource("/templates"); 
 		try {
 			cfg.setDirectoryForTemplateLoading(new File(url.getFile()));
-			//cfg.setDirectoryForTemplateLoading(new File("C:\\templates"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		cfg.setObjectWrapper(new DefaultObjectWrapper());
 		
 		//Creation du repertoire
@@ -57,14 +59,20 @@ public class GeneratorManager {
 	}
 	
 	
-	private void setPackageName() {
+	private void setPackageName(String packagePrefix) {
+		if(null != packagePrefix) {
+			this.packageName = packagePrefix;
+			this.packagePrefix = packagePrefix;
+			return;
+		}
+		
 		String prefix = "";
 		String localName = clazz.getName();
 		int lastIndex = localName.lastIndexOf(PACKAGE_SEPARATOR); //on verifie que la classe a un prefixe package
 		if(lastIndex != -1) {
 			prefix = localName.substring(0,lastIndex+1);
 		} 
-		
+	
 		this.packageName = prefix;
 		this.packagePrefix = prefix;
 	}
@@ -203,7 +211,7 @@ public class GeneratorManager {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		GeneratorManager manager = new GeneratorManager(CorbaCalculatorOperations.class,DEFAULT_DESTINATION);
+		GeneratorManager manager = new GeneratorManager(CorbaCalculatorOperations.class,DEFAULT_DESTINATION,null);
 		manager.runGenerator();
 	}
 
