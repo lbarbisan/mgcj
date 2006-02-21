@@ -1,21 +1,26 @@
 package fr.umlv.corba.calculator.proxy.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+import fr.umlv.corba.calculator.proxy.ArithmeticException;
 import fr.umlv.corba.calculator.proxy.CorbaCalculatorOperations;
+import fr.umlv.corba.calculator.proxy.InvalidNumberOfOperators;
+import fr.umlv.corba.calculator.proxy.UnKnowErrorException;
 
 /**
  * @author Mathieu MANCEL
@@ -27,133 +32,113 @@ public class GraphicCalculator {
     private ArrayList<JButton> buttons;
     private static CorbaCalculatorOperations calculator;
     private JTextField label;
+    private JTextArea history;
     
     public GraphicCalculator(CorbaCalculatorOperations calculator){
       
         GraphicCalculator.calculator = calculator;
+        
         this.buttons = new ArrayList<JButton>();
-        // Ajout des chiffres
-        for(int i=0;i<9;i++){
-            final JButton button = new JButton(Integer.toString(i+1));
+        String[] buttonsNames = {"CE","7","8","9","/","C","4","5","6","*","=","1","2","3","-","OK","","0","","+"};
+        
+	    	for (int i = 0; i < buttonsNames.length; i++) {
+            final JButton button = new JButton(buttonsNames[i]);
+            if(button.getText()==""){
+        		button.setEnabled(false);
+        	}
             button.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent arg0) {
-                    //GraphicCalculator.calculator.push(new Integer(button.getText()).shortValue());
-                    label.setText(label.getText()+button.getText());
-                }});
+                	try {
+                	
+                		if(button.getText().equals("OK")&& label.getText().length()>0){
+                           try{
+                               short shortValue = new Integer(label.getText()).shortValue();
+                               label.setText("");
+                               history.setText(history.getText()+"\n"+shortValue);
+                               GraphicCalculator.calculator.push(shortValue);
+                            }catch(NumberFormatException e){};
+                		}
+                		else if(button.getText().equals("+")){
+        					GraphicCalculator.calculator.add();
+        					label.setText(new Integer(GraphicCalculator.calculator.top()).toString());
+        					history.setText(history.getText()+"\n+");
+                		}
+                		else if(button.getText().equals("-")){
+        					GraphicCalculator.calculator.sub();
+        					label.setText(new Integer(GraphicCalculator.calculator.top()).toString());
+        					history.setText(history.getText()+"\n-");
+                		}
+                		else if(button.getText().equals("*")){
+        					GraphicCalculator.calculator.mult();
+        					label.setText(new Integer(GraphicCalculator.calculator.top()).toString());
+        					history.setText(history.getText()+"\n*");
+                		}
+                		else if(button.getText().equals("/")){
+        					GraphicCalculator.calculator.div();
+        					label.setText(new Integer(GraphicCalculator.calculator.top()).toString());
+        					history.setText(history.getText()+"\n/");
+                		}
+                		else if(button.getText().equals("=")){
+                			String result =  new Integer(GraphicCalculator.calculator.pop()).toString();
+        					label.setText(result);
+        					history.setText(history.getText()+"\n=" + result);
+                		}
+                		else if(button.getText().equals("CE")){
+                			label.setText("");
+                		}
+                		else if(button.getText().equals("C")){
+                			//TODO VIDER LA PILE
+                			label.setText("");
+                			history.setText("Opérations:");
+                		}
+                		else{
+                			label.setText(label.getText()+button.getText());
+                		}
+                		} catch (InvalidNumberOfOperators e) {
+                			// TODO Auto-generated catch block
+                			e.printStackTrace();
+                		} catch (UnKnowErrorException e) {
+                			// TODO Auto-generated catch block
+                			e.printStackTrace();
+                		} catch (ArithmeticException e) {
+                			// TODO Auto-generated catch block
+                			e.printStackTrace();
+                		}
+                	}});
             buttons.add(button);
         }
-        final JButton button = new JButton("0");
-        button.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent arg0) {
-                label.setText(label.getText()+button.getText());
-            }});
-        buttons.add(button);
-        
-        // Ajout des opérations
+
         this.frame = new JFrame("CorbaCalculator");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         Container container = frame.getContentPane();
         container.setLayout(new BorderLayout());
-        JPanel numbers = new JPanel();
         
-        BoxLayout numLayout = new BoxLayout(numbers,BoxLayout.Y_AXIS);
-        Box line1 = new Box(BoxLayout.X_AXIS);
-        for(int i=0;i<3;i++){
-            line1.add(buttons.get(i));
-        }
-        Box line2 = new Box(BoxLayout.X_AXIS);
-        for(int i=3;i<6;i++){
-            line2.add(buttons.get(i));
-        }
-        Box line3 = new Box(BoxLayout.X_AXIS);
-        for(int i=6;i<9;i++){
-            line3.add(buttons.get(i));
-        }
-        Box line4 = new Box(BoxLayout.X_AXIS);
-        line4.add(Box.createHorizontalGlue());
-        line4.add(buttons.get(9));
-        line4.add(Box.createHorizontalGlue());
-        
-        numbers.add(line1);
-        numbers.add(line2);
-        numbers.add(line3);
-        numbers.add(line4);
-        numbers.setLayout(numLayout);
-        
-        JPanel operations = new JPanel();
-        BoxLayout operationsLayout = new BoxLayout(operations,BoxLayout.X_AXIS);
-        Box col = new Box(BoxLayout.Y_AXIS);
-        
-        JButton add = new JButton("+");
-        add.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent arg0) {
-                GraphicCalculator.calculator.add();
-                label.setText(new Integer(GraphicCalculator.calculator.pop()).toString());
-            }});
-        
-        JButton sub = new JButton("-");
-        sub.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent arg0) {
-                GraphicCalculator.calculator.sub();
-                label.setText(new Integer(GraphicCalculator.calculator.pop()).toString());
-            }});
-        
-        JButton mult = new JButton("X");
-        mult.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent arg0) {
-                GraphicCalculator.calculator.mult();
-                label.setText(new Integer(GraphicCalculator.calculator.pop()).toString());
-            }});
-        
-        JButton div = new JButton("/");
-        div.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent arg0) {
-                GraphicCalculator.calculator.div();
-                label.setText(new Integer(GraphicCalculator.calculator.pop()).toString());
-            }});
-        
-        col.add(add);
-        col.add(sub);
-        col.add(mult);
-        col.add(div);
-        col.add(Box.createVerticalGlue());
-        
-        operations.add(Box.createHorizontalGlue());
-        operations.add(col);
-        operations.setLayout(operationsLayout);
-        
-        JPanel top = new JPanel();
         this.label = new JTextField(10);
-        JButton ok = new JButton("OK");
-        ok.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent arg0) {
-                if(label.getText().length()>0){
-                    try{
-                        short shortValue = new Integer(label.getText()).shortValue();
-                        System.out.println("La valeur envoyer est " + shortValue);
-						GraphicCalculator.calculator.push(shortValue);
-                        label.setText("");
-                    }catch(NumberFormatException e){
-                        label.setText("");
-                    };
-                }
-            }});
-        JButton cancel = new JButton("C");
-        cancel.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent arg0) {
-                label.setText("");
-            }});
-        top.add(label);
-        top.add(ok);
-        top.add(cancel);
-        top.setBorder(BorderFactory.createEtchedBorder());
-        numbers.setBorder(BorderFactory.createEtchedBorder());
-        operations.setBorder(BorderFactory.createEtchedBorder());
-        container.add(top,BorderLayout.NORTH);
-        container.add(numbers,BorderLayout.CENTER);
-        container.add(operations,BorderLayout.EAST);
+        this.label.setEnabled(false);
+        
+		// Zone de Résultat
+        this.label.setBackground(Color.black);// Fond Noir
+        this.label.setForeground(Color.green);// Chiffres en Vert 
+        this.label.setHorizontalAlignment(JTextField.RIGHT);// à partir de la droite
+        this.label.setFont(new Font("Times",Font.BOLD,16));// Police
+        
+        this.history = new JTextArea(5,10);
+        this.history.setEnabled(false);
+        this.history.setText("Opérations:");
+        JScrollPane scrollPane = new JScrollPane(history,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new GridLayout(4,5));
+        for(int i=0;i<buttons.size();i++){
+            buttonsPanel.add(buttons.get(i));
+        }
+        
+        container.add(buttonsPanel,BorderLayout.CENTER);
+        container.add(this.label,BorderLayout.NORTH);
+        container.add(scrollPane,BorderLayout.SOUTH);
+        
         this.frame.pack();
         this.frame.setLocationRelativeTo(null);
+        this.frame.setResizable(false);
     }
     
     /**
@@ -162,6 +147,5 @@ public class GraphicCalculator {
     public JFrame getFrame() {
         return frame;
     }
-    
 }
 
