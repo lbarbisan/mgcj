@@ -8,6 +8,7 @@ import org.omg.CosNaming.NamingContextExtHelper;
 
 import fr.umlv.corba.calculator.proxy.CorbaCalculator;
 import fr.umlv.corba.calculator.proxy.CorbaCalculatorHelper;
+import fr.umlv.corba.calculator.proxy.ui.GraphicCalculator;
 
 public class Client {
 
@@ -24,12 +25,15 @@ public class Client {
         NamingContextExt context = NamingContextExtHelper.narrow(orb.resolve_initial_references("NameService"));
        
         CorbaCalculator calculator = CorbaCalculatorHelper.narrow(context.resolve_str("Calculator"));
-       
-        calculator.push((short) 15);
-        //calculator.push((short) 10);
-        //calculator.mult();
         
-        System.out.println("le resultat est : " + calculator.pop());
+        calculator.reset();
+        calculator.push((short) 12);
+        calculator.push((short) 12);
+        calculator.add();
+        System.out.println("La valeur " + calculator.pop());
+        calculator.reset();
+        //on demarre le mode graphique
+        new GraphicCalculator(calculator).getFrame().setVisible(true);
 	}
 
 }

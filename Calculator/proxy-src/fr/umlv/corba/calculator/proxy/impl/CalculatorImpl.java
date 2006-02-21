@@ -56,6 +56,21 @@ public class CalculatorImpl extends CorbaCalculatorPOA {
 				arrayResponse[1]);
 		return response;
 	}
+	
+	/* (non-Javadoc)
+	 * @see fr.umlv.corba.calculator.client.CalculatorOperations#pop()
+	 */
+	public short top() {
+		try {
+			sendAPDU(Calculator.TOP,BYTE,2);
+		} catch (CardTerminalException e) {
+			e.printStackTrace();
+		}
+		byte[] arrayResponse = result.getBuffer();
+		short response = Util.BytePairToShort(arrayResponse[0],
+				arrayResponse[1]);
+		return response;
+	}
 
 	/* (non-Javadoc)
 	 * @see fr.umlv.corba.calculator.client.CalculatorOperations#add()
@@ -101,6 +116,14 @@ public class CalculatorImpl extends CorbaCalculatorPOA {
 		} 
 	}
 
+	public void reset() {
+		try {
+			sendAPDU(Calculator.RESET, BYTE,0);
+		} catch (CardTerminalException e) {
+			e.printStackTrace();
+		} 
+	}
+	
 	/* (non-Javadoc)
 	 * @see opencard.cflex.service.CFlex32CardService#sendAPDU(opencard.core.terminal.CommandAPDU)
 	 */
