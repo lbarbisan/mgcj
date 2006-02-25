@@ -9,7 +9,10 @@ import opencard.core.terminal.ResponseAPDU;
 import opencard.opt.terminal.ISOCommandAPDU;
 import fr.umlv.corba.calculator.applet.Calculator;
 import fr.umlv.corba.calculator.applet.Util;
+import fr.umlv.corba.calculator.proxy.ArithmeticException;
 import fr.umlv.corba.calculator.proxy.CorbaCalculatorPOA;
+import fr.umlv.corba.calculator.proxy.InvalidNumberOfOperators;
+import fr.umlv.corba.calculator.proxy.UnKnowErrorException;
 
 /**
  * @author cedric
@@ -45,12 +48,25 @@ public class CalculatorImpl extends CorbaCalculatorPOA {
 	/* (non-Javadoc)
 	 * @see fr.umlv.corba.calculator.client.CalculatorOperations#pop()
 	 */
-	public short pop() {
+	public short pop() throws InvalidNumberOfOperators, UnKnowErrorException {
 		try {
 			sendAPDU(Calculator.GET,BYTE,2);
 		} catch (CardTerminalException e) {
 			e.printStackTrace();
 		}
+		
+		short status = (short) result.sw();
+		if(status != (short)0x9000) { 
+			switch (status) {
+			case Calculator.SW_EMPTY_STACK :
+				throw new InvalidNumberOfOperators("La pile est vide.");
+			case Calculator.SW_INVALID_NUMBER_OF_OPERATORS :
+				throw new InvalidNumberOfOperators("Nombre d'operateurs incorrects.");
+			default:
+				throw new UnKnowErrorException("Erreur inconnue");
+			}
+		}
+		
 		byte[] arrayResponse = result.getBuffer();
 		short response = Util.BytePairToShort(arrayResponse[0],
 				arrayResponse[1]);
@@ -60,12 +76,25 @@ public class CalculatorImpl extends CorbaCalculatorPOA {
 	/* (non-Javadoc)
 	 * @see fr.umlv.corba.calculator.client.CalculatorOperations#pop()
 	 */
-	public short top() {
+	public short top() throws InvalidNumberOfOperators, UnKnowErrorException {
 		try {
 			sendAPDU(Calculator.TOP,BYTE,2);
 		} catch (CardTerminalException e) {
 			e.printStackTrace();
 		}
+		
+		short status = (short) result.sw();
+		if(status != (short)0x9000) { 
+			switch (status) {
+			case Calculator.SW_EMPTY_STACK :
+				throw new InvalidNumberOfOperators("La pile est vide.");
+			case Calculator.SW_INVALID_NUMBER_OF_OPERATORS :
+				throw new InvalidNumberOfOperators("Nombre d'operateurs incorrects.");
+			default:
+				throw new UnKnowErrorException("Erreur inconnue");
+			}
+		}
+		
 		byte[] arrayResponse = result.getBuffer();
 		short response = Util.BytePairToShort(arrayResponse[0],
 				arrayResponse[1]);
@@ -75,45 +104,95 @@ public class CalculatorImpl extends CorbaCalculatorPOA {
 	/* (non-Javadoc)
 	 * @see fr.umlv.corba.calculator.client.CalculatorOperations#add()
 	 */
-	public void add() {
+	public void add() throws InvalidNumberOfOperators, UnKnowErrorException {
 		try {
 			sendAPDU(Calculator.ADD,BYTE,0);
 		} catch (CardTerminalException e1) {
 			e1.printStackTrace();
+		}
+		
+		short status = (short) result.sw();
+		if(status != (short)0x9000) { 
+			switch (status) {
+			case Calculator.SW_EMPTY_STACK :
+				throw new InvalidNumberOfOperators("La pile est vide.");
+			case Calculator.SW_INVALID_NUMBER_OF_OPERATORS :
+				throw new InvalidNumberOfOperators("Nombre d'operateurs incorrects.");
+			default:
+				throw new UnKnowErrorException("Erreur inconnue");
+			}
 		}
 	}
 
 	/* (non-Javadoc)
 	 * @see fr.umlv.corba.calculator.client.CalculatorOperations#minus()
 	 */
-	public void sub() {
+	public void sub() throws InvalidNumberOfOperators, UnKnowErrorException {
 		try {
 			sendAPDU(Calculator.SUB,BYTE,0);
 		} catch (CardTerminalException e1) {
 			e1.printStackTrace();
+		}
+		
+		short status = (short) result.sw();
+		if(status != (short)0x9000) { 
+			switch (status) {
+			case Calculator.SW_EMPTY_STACK :
+				throw new InvalidNumberOfOperators("La pile est vide.");
+			case Calculator.SW_INVALID_NUMBER_OF_OPERATORS :
+				throw new InvalidNumberOfOperators("Nombre d'operateurs incorrects.");
+			default:
+				throw new UnKnowErrorException("Erreur inconnue");
+			}
 		}
 	}
 
 	/* (non-Javadoc)
 	 * @see fr.umlv.corba.calculator.client.CalculatorOperations#mult()
 	 */
-	public void mult() {
+	public void mult() throws InvalidNumberOfOperators, UnKnowErrorException {
 		try {
 			sendAPDU(Calculator.MULT, BYTE,0);
 		} catch (CardTerminalException e) {
 			e.printStackTrace();
+		}
+		
+		short status = (short) result.sw();
+		if(status != (short)0x9000) { 
+			switch (status) {
+			case Calculator.SW_EMPTY_STACK :
+				throw new InvalidNumberOfOperators("La pile est vide.");
+			case Calculator.SW_INVALID_NUMBER_OF_OPERATORS :
+				throw new InvalidNumberOfOperators("Nombre d'operateurs incorrects.");
+			default:
+				throw new UnKnowErrorException("Erreur inconnue");
+			}
 		}
 	}
 
 	/* (non-Javadoc)
 	 * @see fr.umlv.corba.calculator.client.CalculatorOperations#div()
 	 */
-	public void div() {
+	public void div() throws ArithmeticException, InvalidNumberOfOperators, UnKnowErrorException {
 		try {
 			sendAPDU(Calculator.DIV, BYTE,0);
 		} catch (CardTerminalException e) {
 			e.printStackTrace();
 		} 
+		
+		short status = (short) result.sw();
+		if(status != (short)0x9000) { 
+			switch (status) {
+			case Calculator.SW_ARITHMETIC_ERROR :
+				throw new ArithmeticException("Division par 0 impossible.");
+			case Calculator.SW_EMPTY_STACK :
+				throw new InvalidNumberOfOperators("La pile est vide.");
+			case Calculator.SW_INVALID_NUMBER_OF_OPERATORS :
+				throw new InvalidNumberOfOperators("Nombre d'operateurs incorrects.");
+			default:
+				throw new UnKnowErrorException("Erreur inconnue");
+			}
+		}
 	}
 
 	public void reset() {
@@ -135,6 +214,7 @@ public class CalculatorImpl extends CorbaCalculatorPOA {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		return result;
 	}
 }
