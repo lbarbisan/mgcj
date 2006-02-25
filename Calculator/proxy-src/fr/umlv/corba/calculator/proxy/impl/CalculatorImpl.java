@@ -20,6 +20,8 @@ import fr.umlv.corba.calculator.proxy.UnKnowErrorException;
  */
 public class CalculatorImpl extends CorbaCalculatorPOA {
 
+	private static final int GOOD_STATUS = 0x9000;
+
 	private static final byte[] BYTE = new byte[0];
 
 	public static final byte ZERO = (byte) 0;
@@ -43,16 +45,13 @@ public class CalculatorImpl extends CorbaCalculatorPOA {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+	
 		short status = (short) result.sw();
-		if(status != (short)0x9000) { 
-			switch (status) {
-			case Calculator.SW_ARITHMETIC_ERROR :
-				throw new ArithmeticException("Une erreur s'est produite.");
-			default:
-				throw new UnKnowErrorException("Erreur inconnue");
-			}
+		
+		if(status == Calculator.SW_ARITHMETIC_ERROR) { 
+			throw new ArithmeticException("Une erreur s'est produite.");
 		}
+		
 	}
 
 	/* (non-Javadoc)
@@ -66,7 +65,8 @@ public class CalculatorImpl extends CorbaCalculatorPOA {
 		}
 		
 		short status = (short) result.sw();
-		if(status != (short)0x9000) { 
+		
+		if(status != (short)GOOD_STATUS) { 
 			switch (status) {
 			case Calculator.SW_EMPTY_STACK :
 				throw new InvalidNumberOfOperators("La pile est vide.");
