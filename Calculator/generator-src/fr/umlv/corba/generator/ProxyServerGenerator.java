@@ -6,6 +6,7 @@ package fr.umlv.corba.generator;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * @author cedric
  *
