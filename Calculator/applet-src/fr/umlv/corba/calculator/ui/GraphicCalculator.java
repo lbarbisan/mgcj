@@ -40,7 +40,15 @@ public class GraphicCalculator {
             final JButton button = new JButton(Integer.toString(i+1));
             button.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent arg0) {
-                    GraphicCalculator.calculator.push(new Integer(button.getText()).shortValue());
+                    try {
+						GraphicCalculator.calculator.push(new Integer(button.getText()).shortValue());
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					} catch (ArithmeticException e) {
+						e.printStackTrace();
+					} catch (UnKnowErrorException e) {
+						e.printStackTrace();
+					}
                     label.setText(label.getText()+button.getText());
                 }});
             buttons.add(button);
@@ -199,7 +207,13 @@ public class GraphicCalculator {
             public void actionPerformed(ActionEvent arg0) {
                 if(label.getText().length()>0){
                     try{
-                        GraphicCalculator.calculator.push(new Integer(label.getText()).shortValue());
+                        try {
+							GraphicCalculator.calculator.push(new Integer(label.getText()).shortValue());
+						} catch (ArithmeticException e) {
+							e.printStackTrace();
+						} catch (UnKnowErrorException e) {
+							e.printStackTrace();
+						}
                         label.setText("");
                     }catch(NumberFormatException e){
                         label.setText("");
