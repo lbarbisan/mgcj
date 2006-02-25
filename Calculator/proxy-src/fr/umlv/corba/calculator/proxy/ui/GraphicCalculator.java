@@ -30,16 +30,16 @@ public class GraphicCalculator {
 
     private JFrame frame;
     private ArrayList<JButton> buttons;
-    private static CorbaCalculatorOperations calculator;
-    private JTextField label;
+    private final CorbaCalculatorOperations calculator;
+    private static JTextField label;
     private JTextArea history;
+    private static boolean result = false;
     
-    public GraphicCalculator(CorbaCalculatorOperations calculator){
+    public GraphicCalculator(final CorbaCalculatorOperations calculator){
       
-        GraphicCalculator.calculator = calculator;
-        
+        this.calculator = calculator;
         this.buttons = new ArrayList<JButton>();
-        String[] buttonsNames = {"CE","7","8","9","/","C","4","5","6","*","=","1","2","3","-","OK","","0","","+"};
+        String[] buttonsNames = {"CE","7","8","9","/","C","4","5","6","*","=","1","2","3","-","OK","","0","-(x)","+"};
         
 	    	for (int i = 0; i < buttonsNames.length; i++) {
             final JButton button = new JButton(buttonsNames[i]);
@@ -48,61 +48,81 @@ public class GraphicCalculator {
         	}
             button.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent arg0) {
+                	String text = label.getText();
+					String historyText = history.getText();
                 	try {
-                	
-                		if(button.getText().equals("OK")&& label.getText().length()>0){
+						if(button.getText().equals("OK")&& text.length()>0){
                            try{
-                               short shortValue = new Integer(label.getText()).shortValue();
+                               short shortValue = new Integer(text).shortValue();
                                label.setText("");
-                               history.setText(history.getText()+"\n"+shortValue);
-                               GraphicCalculator.calculator.push(shortValue);
+                               history.setText(historyText+"\n"+shortValue);
+                               calculator.push(shortValue);
                             }catch(NumberFormatException e){};
                 		}
                 		else if(button.getText().equals("+")){
-        					GraphicCalculator.calculator.add();
-        					label.setText(new Integer(GraphicCalculator.calculator.top()).toString());
-        					history.setText(history.getText()+"\n+");
+                			result = true;
+        					calculator.add();
+        					label.setText(new Integer(calculator.top()).toString());
+        					history.setText(historyText+"\n+");
                 		}
                 		else if(button.getText().equals("-")){
-        					GraphicCalculator.calculator.sub();
-        					label.setText(new Integer(GraphicCalculator.calculator.top()).toString());
-        					history.setText(history.getText()+"\n-");
+                			result = true;
+                			calculator.sub();
+        					label.setText(new Integer(calculator.top()).toString());
+        					history.setText(historyText+"\n-");
                 		}
                 		else if(button.getText().equals("*")){
-        					GraphicCalculator.calculator.mult();
-        					label.setText(new Integer(GraphicCalculator.calculator.top()).toString());
-        					history.setText(history.getText()+"\n*");
+                			result = true;
+                			calculator.mult();
+        					label.setText(new Integer(calculator.top()).toString());
+        					history.setText(historyText+"\n*");
                 		}
                 		else if(button.getText().equals("/")){
-        					GraphicCalculator.calculator.div();
-        					label.setText(new Integer(GraphicCalculator.calculator.top()).toString());
-        					history.setText(history.getText()+"\n/");
+                			result = true;
+                			calculator.div();
+        					label.setText(new Integer(calculator.top()).toString());
+        					history.setText(historyText+"\n/");
                 		}
                 		else if(button.getText().equals("=")){
-                			String result =  new Integer(GraphicCalculator.calculator.pop()).toString();
+                			result = true;
+                			String result =  new Integer(calculator.pop()).toString();
         					label.setText(result);
-        					history.setText(history.getText()+"\n=" + result);
+        					history.setText(historyText+"\n=" + result);
                 		}
                 		else if(button.getText().equals("CE")){
                 			label.setText("");
                 		}
                 		else if(button.getText().equals("C")){
-                			//TODO VIDER LA PILE
+                			calculator.reset();
                 			label.setText("");
                 			history.setText("Opérations:");
                 		}
+                		else if(button.getText().equals("-(x)")){
+                			if(text.length()>0 && text.contains("-")){
+                				String pos = "";
+                				pos = text.substring(1);
+                				label.setText(pos);
+                			}
+                			if(text.length()>0 && !text.contains("-")){
+                				label.setText("-" + text);
+                			}
+                		}
                 		else{
-                			label.setText(label.getText()+button.getText());
+                			if(result)
+                				label.setText(button.getText());
+                			else
+                				label.setText(text+button.getText());
+                			result = false;
                 		}
                 		} catch (InvalidNumberOfOperators e) {
-                			// TODO Auto-generated catch block
-                			e.printStackTrace();
+                			history.setText(historyText+"\n=" + e.getMessage());
+                			//e.printStackTrace();
                 		} catch (UnKnowErrorException e) {
-                			// TODO Auto-generated catch block
-                			e.printStackTrace();
+                			history.setText(historyText+"\n=" + e.getMessage());
+                			//e.printStackTrace();
                 		} catch (ArithmeticException e) {
-                			// TODO Auto-generated catch block
-                			e.printStackTrace();
+                			history.setText(historyText+"\n=" + e.getMessage());
+                			//e.printStackTrace();
                 		}
                 	}});
             buttons.add(button);
@@ -113,14 +133,14 @@ public class GraphicCalculator {
         Container container = frame.getContentPane();
         container.setLayout(new BorderLayout());
         
-        this.label = new JTextField(10);
-        this.label.setEnabled(false);
+        label = new JTextField(10);
+        label.setEnabled(false);
         
 		// Zone de Résultat
-        this.label.setBackground(Color.black);// Fond Noir
-        this.label.setForeground(Color.green);// Chiffres en Vert 
-        this.label.setHorizontalAlignment(JTextField.RIGHT);// à partir de la droite
-        this.label.setFont(new Font("Times",Font.BOLD,16));// Police
+        label.setBackground(Color.black);// Fond Noir
+        label.setForeground(Color.green);// Chiffres en Vert 
+        label.setHorizontalAlignment(JTextField.RIGHT);// à partir de la droite
+        label.setFont(new Font("Times",Font.BOLD,16));// Police
         
         this.history = new JTextArea(5,10);
         this.history.setEnabled(false);
@@ -133,7 +153,7 @@ public class GraphicCalculator {
         }
         
         container.add(buttonsPanel,BorderLayout.CENTER);
-        container.add(this.label,BorderLayout.NORTH);
+        container.add(label,BorderLayout.NORTH);
         container.add(scrollPane,BorderLayout.SOUTH);
         
         this.frame.pack();
@@ -144,8 +164,13 @@ public class GraphicCalculator {
     /**
      * @return Returns the frame.
      */
-    public JFrame getFrame() {
+    public JFrame getFrame()
+    {
         return frame;
+    }
+    
+    public static void main(String[] args){
+    	new GraphicCalculator(null).getFrame().setVisible(true);
     }
 }
 
