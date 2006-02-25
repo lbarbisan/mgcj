@@ -12,7 +12,7 @@ module proxy {
 	};
 
 	interface CorbaCalculator {
-		void push(in short value) raises (InvalidNumberOfOperators,UnKnowErrorException);
+		void push(in short value) raises (ArithmeticException,UnKnowErrorException);
 		short pop() raises (InvalidNumberOfOperators, UnKnowErrorException);
 		short top() raises (InvalidNumberOfOperators, UnKnowErrorException);
 		void add() raises (InvalidNumberOfOperators, UnKnowErrorException);
