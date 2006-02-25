@@ -36,12 +36,22 @@ public class CalculatorImpl extends CorbaCalculatorPOA {
 	/* (non-Javadoc)
 	 * @see fr.umlv.corba.calculator.client.CalculatorOperations#push(short)
 	 */
-	public void push(short value) {
+	public void push(short value) throws ArithmeticException, UnKnowErrorException {
 		byte[] byteValue = Util.ShortToBytePair(value);
 		try {
 			sendAPDU(Calculator.SET,byteValue,byteValue.length);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		
+		short status = (short) result.sw();
+		if(status != (short)0x9000) { 
+			switch (status) {
+			case Calculator.SW_ARITHMETIC_ERROR :
+				throw new ArithmeticException("Une erreur s'est produite.");
+			default:
+				throw new UnKnowErrorException("Erreur inconnue");
+			}
 		}
 	}
 
