@@ -25,6 +25,11 @@ public interface Calculator {
 	final static byte SELECT = (byte) 0xA4;
 	
 	final static byte RESET = (byte) 0xA5;
+	
+	//gestion des erreurs
+	final static short SW_ARITHMETIC_ERROR = (short)0x8000;
+	final static short SW_INVALID_NUMBER_OF_OPERATORS = (short)0x8001;
+	final static short SW_EMPTY_STACK = (short)0x8002;
 
 	void push(APDU apdu);
 

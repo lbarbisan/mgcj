@@ -6,7 +6,7 @@ public interface Stack {
 
 	short pop();
 
-	short first();
+	short top();
 	
 	boolean isEmpty();
 	

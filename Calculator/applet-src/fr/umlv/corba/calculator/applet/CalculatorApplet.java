@@ -93,6 +93,10 @@ public class CalculatorApplet extends Applet implements Calculator {
 	public void pop(APDU apdu) {
 		byte[] buffer = apdu.getBuffer();
 		
+		if(stack.isEmpty()) {
+			ISOException.throwIt(Calculator.SW_EMPTY_STACK);
+		}
+		
 		short value = stack.pop();
 		byte [] TheBuffer = Util.ShortToBytePair(value);
 		
@@ -117,7 +121,11 @@ public class CalculatorApplet extends Applet implements Calculator {
 	public void top(APDU apdu) {
 		byte[] buffer = apdu.getBuffer();
 		
-		short value = stack.first();
+		if(stack.isEmpty()) {
+			ISOException.throwIt(Calculator.SW_EMPTY_STACK);
+		}
+		
+		short value = stack.top();
 		byte [] TheBuffer = Util.ShortToBytePair(value);
 		
 		// inform system that the applet has finished processing
@@ -144,7 +152,7 @@ public class CalculatorApplet extends Applet implements Calculator {
 	   	byte size = (byte)(apdu.setIncomingAndReceive());
 
 		if (size != BUFFER_MAX_SIZE) { 
-			ISOException.throwIt(ISO7816.SW_WRONG_LENGTH); 
+			ISOException.throwIt(Calculator.SW_ARITHMETIC_ERROR); 
 		}
 		
 		byte[] TheBuffer = new byte[size];
@@ -157,8 +165,13 @@ public class CalculatorApplet extends Applet implements Calculator {
 	}
 	
 	public void add(APDU apdu) {
-		if(stack.isEmpty() || stack.size()<MIN_OPERATORS) {
-			ISOException.throwIt(ISO7816.SW_CONDITIONS_NOT_SATISFIED);
+		
+		if(stack.isEmpty()) {
+			ISOException.throwIt(Calculator.SW_EMPTY_STACK);
+		}
+		
+		if(stack.size()<MIN_OPERATORS) {
+			ISOException.throwIt(Calculator.SW_INVALID_NUMBER_OF_OPERATORS);
 		}
 		
 		short first = stack.pop();
@@ -170,8 +183,13 @@ public class CalculatorApplet extends Applet implements Calculator {
 	}
 
 	public void sub(APDU apdu) {
-		if(stack.isEmpty() || stack.size()<MIN_OPERATORS) {
-			ISOException.throwIt(ISO7816.SW_CONDITIONS_NOT_SATISFIED);
+		
+		if(stack.isEmpty()) {
+			ISOException.throwIt(Calculator.SW_EMPTY_STACK);
+		}
+		
+		if(stack.size()<MIN_OPERATORS) {
+			ISOException.throwIt(Calculator.SW_INVALID_NUMBER_OF_OPERATORS);
 		}
 		
 		short first = stack.pop();
@@ -183,15 +201,22 @@ public class CalculatorApplet extends Applet implements Calculator {
 	}
 	
 	public void div(APDU apdu) {
-		if(stack.isEmpty() || stack.size()<MIN_OPERATORS) {
-			ISOException.throwIt(ISO7816.SW_CONDITIONS_NOT_SATISFIED);
+		
+		if(stack.isEmpty()) {
+			ISOException.throwIt(Calculator.SW_EMPTY_STACK);
+		}
+		
+		if(stack.size()<MIN_OPERATORS) {
+			ISOException.throwIt(Calculator.SW_INVALID_NUMBER_OF_OPERATORS);
 		}
 		
 		short first = stack.pop();
 		short second = stack.pop();
+		
 		if(first == (short)0) {
-			ISOException.throwIt(ISO7816.SW_CONDITIONS_NOT_SATISFIED);
+			ISOException.throwIt(Calculator.SW_ARITHMETIC_ERROR); //division par 0
 		}
+		
 		stack.push((short)(second/first));
 		
 		// return successfully
@@ -199,8 +224,13 @@ public class CalculatorApplet extends Applet implements Calculator {
 	}
 	
 	public void mult(APDU apdu) {
-		if(stack.isEmpty() || stack.size()<MIN_OPERATORS) {
-			ISOException.throwIt(ISO7816.SW_CONDITIONS_NOT_SATISFIED);
+		
+		if(stack.isEmpty()) {
+			ISOException.throwIt(Calculator.SW_EMPTY_STACK);
+		}
+		
+		if(stack.size()<MIN_OPERATORS) {
+			ISOException.throwIt(Calculator.SW_INVALID_NUMBER_OF_OPERATORS);
 		}
 		
 		short first = stack.pop();

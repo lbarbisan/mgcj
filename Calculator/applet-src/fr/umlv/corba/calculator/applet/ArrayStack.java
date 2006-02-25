@@ -31,7 +31,7 @@ public class ArrayStack implements Stack {
 		return array[(short)(--index)];
 	}
 
-	public short first() {
+	public short top() {
 		return array[(short)(index-(short)1)];
 	}
 
