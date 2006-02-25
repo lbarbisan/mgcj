@@ -25,6 +25,7 @@ import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 import org.omg.PortableServer.Servant;
 
+import fr.umlv.corba.calculator.Utils;
 import fr.umlv.corba.calculator.proxy.impl.CalculatorImpl;
 
 /**
@@ -55,7 +56,7 @@ public class Server {
 		context.rebind(name, rootPOA.id_to_reference(servantID));
 
 		rootPOA.the_POAManager().activate();
-		System.out.println("server is running");
+		System.out.println("server is running...");
 		orb.run();
 	}
 	
@@ -70,9 +71,9 @@ public class Server {
 		for (Enumeration terminals = ctr.getCardTerminals(); terminals
 				.hasMoreElements();) {
 			CardTerminal terminal = (CardTerminal) terminals.nextElement();
-			int slots = Server.printTerminalInfos(terminal);
+			int slots = Utils.printTerminalInfos(terminal);
 			for (int j = 0; j < slots; j++) {
-				Server.printSlotInfos(terminal, j);
+				Utils.printSlotInfos(terminal, j);
 			}
 		}
 		System.out.println("Insert your card ...");
@@ -85,31 +86,4 @@ public class Server {
 		return true;
 	}
 
-	private static int printTerminalInfos(CardTerminal terminal) {
-		// First of all print all information stored about this reader
-		System.err.println("Address: " + terminal.getAddress() + "\n"
-				+ "Name:    " + terminal.getName() + "\n" + "Type:    "
-				+ terminal.getType() + "\n" + "Slots:   " + terminal.getSlots()
-				+ "\n");
-		return terminal.getSlots();
-	}
-
-	private static void printSlotInfos(CardTerminal terminal, int aSlotID) {
-		try {
-			// First print the ID of the slot
-			System.err.println("Info for slot ID: " + aSlotID);
-			if (terminal.isCardPresent(aSlotID)) {
-				System.err.println("card present: yes");
-				// If there is a card in the slot print the ATR the OCF got form this
-				// card
-				System.err.println("ATR: "
-						+ HexString
-								.hexify(terminal.getCardID(aSlotID).getATR()));
-				// As we do not have a driver for this card we cannot interpret this ATR
-			} else
-				System.err.println("card present: no");
-		} catch (CardTerminalException e) {
-			e.printStackTrace();
-		}
-	}
 }
