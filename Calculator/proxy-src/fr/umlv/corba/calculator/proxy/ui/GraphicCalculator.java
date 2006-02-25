@@ -98,14 +98,19 @@ public class GraphicCalculator {
                 			history.setText("Opérations:");
                 		}
                 		else if(button.getText().equals("-(x)")){
+                			String pos = "";
                 			if(text.length()>0 && text.contains("-")){
-                				String pos = "";
                 				pos = text.substring(1);
-                				label.setText(pos);
+                			} else if(text.length()>0 && !text.contains("-")){
+                				pos = "-" + text;
                 			}
-                			if(text.length()>0 && !text.contains("-")){
-                				label.setText("-" + text);
+                			label.setText(pos);
+                			if(result) {
+                				calculator.pop();
+                				calculator.push(new Integer(pos).shortValue());
+                				
                 			}
+                			
                 		}
                 		else{
                 			if(result)
@@ -115,13 +120,13 @@ public class GraphicCalculator {
                 			result = false;
                 		}
                 		} catch (InvalidNumberOfOperators e) {
-                			history.setText(historyText+"\n=" + e.getMessage());
+                			history.setText(historyText+"\n" + e.message);
                 			//e.printStackTrace();
                 		} catch (UnKnowErrorException e) {
-                			history.setText(historyText+"\n=" + e.getMessage());
+                			history.setText(historyText+"\n" + e.message);
                 			//e.printStackTrace();
                 		} catch (ArithmeticException e) {
-                			history.setText(historyText+"\n=" + e.getMessage());
+                			history.setText(historyText+"\n" + e.message);
                 			//e.printStackTrace();
                 		}
                 	}});
@@ -134,7 +139,7 @@ public class GraphicCalculator {
         container.setLayout(new BorderLayout());
         
         label = new JTextField(10);
-        label.setEnabled(false);
+        label.setFocusable(false);
         
 		// Zone de Résultat
         label.setBackground(Color.black);// Fond Noir
@@ -143,7 +148,8 @@ public class GraphicCalculator {
         label.setFont(new Font("Times",Font.BOLD,16));// Police
         
         this.history = new JTextArea(5,10);
-        this.history.setEnabled(false);
+        this.history.setFocusable(false);
+       
         this.history.setText("Opérations:");
         JScrollPane scrollPane = new JScrollPane(history,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JPanel buttonsPanel = new JPanel();
@@ -168,9 +174,6 @@ public class GraphicCalculator {
     {
         return frame;
     }
-    
-    public static void main(String[] args){
-    	new GraphicCalculator(null).getFrame().setVisible(true);
-    }
+ 
 }
 
