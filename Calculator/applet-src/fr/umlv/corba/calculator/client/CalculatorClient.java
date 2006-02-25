@@ -58,12 +58,12 @@ public class CalculatorClient {
 					(byte) 0xA0, (byte) 0x60, (byte) 0, (byte) 0, new byte[0], 0));
 			System.out.println("Statut : " + res.sw());
 			
-			check(res.getBuffer());
+			//check(res.getBuffer());
 			res = javacard.sendAPDU(new ISOCommandAPDU((byte) 0xA0,
 					(byte) 0x20, (byte) 0, (byte) 0, new byte[0], 2));
 			byte[] arrayResponse = res.getBuffer();
 			short response = Util.BytePairToShort(arrayResponse[0],arrayResponse[1]);
-			check(arrayResponse);
+			//check(arrayResponse);
 			System.err.println("le resultat : " + response);
 		}  catch (ArithmeticException e) {
 			e.printStackTrace();
