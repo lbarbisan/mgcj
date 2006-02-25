@@ -15,6 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+import fr.umlv.corba.calculator.proxy.ArithmeticException;
+import fr.umlv.corba.calculator.proxy.InvalidNumberOfOperators;
+import fr.umlv.corba.calculator.proxy.UnKnowErrorException;
 import fr.umlv.corba.calculator.proxy.impl.CalculatorImpl;
 
 /**
@@ -87,29 +90,96 @@ public class GraphicCalculator {
         JButton add = new JButton("+");
         add.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent arg0) {
-                GraphicCalculator.calculator.add();
-                label.setText(new Integer(GraphicCalculator.calculator.pop()).toString());
+                try {
+					GraphicCalculator.calculator.add();
+				} catch (InvalidNumberOfOperators e) {
+					
+					e.printStackTrace();
+				} catch (UnKnowErrorException e) {
+					
+					e.printStackTrace();
+				}
+                try {
+					label.setText(new Integer(GraphicCalculator.calculator.pop()).toString());
+				} catch (InvalidNumberOfOperators e) {
+					
+					e.printStackTrace();
+				} catch (UnKnowErrorException e) {
+					
+					e.printStackTrace();
+				}
             }});
         
         JButton sub = new JButton("-");
         sub.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent arg0) {
-                GraphicCalculator.calculator.sub();
-                label.setText(new Integer(GraphicCalculator.calculator.pop()).toString());
+                try {
+					GraphicCalculator.calculator.sub();
+				} catch (InvalidNumberOfOperators e) {
+					
+					e.printStackTrace();
+				} catch (UnKnowErrorException e) {
+					
+					e.printStackTrace();
+				}
+                try {
+					label.setText(new Integer(GraphicCalculator.calculator.pop()).toString());
+				} catch (InvalidNumberOfOperators e) {
+					
+					e.printStackTrace();
+				} catch (UnKnowErrorException e) {
+					
+					e.printStackTrace();
+				}
             }});
         
         JButton mult = new JButton("X");
         mult.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent arg0) {
-                GraphicCalculator.calculator.mult();
-                label.setText(new Integer(GraphicCalculator.calculator.pop()).toString());
+                try {
+					GraphicCalculator.calculator.mult();
+				} catch (InvalidNumberOfOperators e) {
+					
+					e.printStackTrace();
+				} catch (UnKnowErrorException e) {
+					
+					e.printStackTrace();
+				}
+                try {
+					label.setText(new Integer(GraphicCalculator.calculator.pop()).toString());
+				} catch (InvalidNumberOfOperators e) {
+					
+					e.printStackTrace();
+				} catch (UnKnowErrorException e) {
+					
+					e.printStackTrace();
+				}
             }});
         
         JButton div = new JButton("/");
         div.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent arg0) {
-                GraphicCalculator.calculator.div();
-                label.setText(new Integer(GraphicCalculator.calculator.pop()).toString());
+                try {
+					GraphicCalculator.calculator.div();
+				} catch (ArithmeticException e) {
+					
+					e.printStackTrace();
+				} catch (InvalidNumberOfOperators e) {
+					
+					e.printStackTrace();
+				} catch (UnKnowErrorException e) {
+					
+					e.printStackTrace();
+				}
+                try {
+					label.setText(new Integer(GraphicCalculator.calculator.pop()).toString());
+				} catch (InvalidNumberOfOperators e) {
+					
+					e.printStackTrace();
+				} catch (UnKnowErrorException e) {
+					
+					e.printStackTrace();
+				}
             }});
         
         col.add(add);
