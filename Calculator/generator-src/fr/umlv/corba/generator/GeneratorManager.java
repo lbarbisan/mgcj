@@ -7,7 +7,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
 
-import fr.umlv.corba.calculator.proxy.CorbaCalculatorOperations;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
@@ -60,11 +59,6 @@ public class GeneratorManager {
 	
 	
 	private void setPackageName(String packagePrefix) {
-		if(null != packagePrefix) {
-			this.packageName = packagePrefix;
-			this.packagePrefix = packagePrefix;
-			return;
-		}
 		
 		String prefix = "";
 		String localName = clazz.getName();
@@ -72,7 +66,7 @@ public class GeneratorManager {
 		if(lastIndex != -1) {
 			prefix = localName.substring(0,lastIndex+1);
 		} 
-	
+		
 		this.packageName = prefix;
 		this.packagePrefix = prefix;
 	}
@@ -211,8 +205,34 @@ public class GeneratorManager {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		GeneratorManager manager = new GeneratorManager(CorbaCalculatorOperations.class,DEFAULT_DESTINATION,null);
-		manager.runGenerator();
+		String destination = DEFAULT_DESTINATION;
+		String klassName = null;
+		
+		if(args.length == 0) {
+			System.out.println("Specifiez le nom de la classe.");
+			return ;
+		} else if (args.length > 1)
+			try {
+			for (int i = 0; i < args.length; i++) {
+				if(args[i].equals("-d")) {
+					destination = args[i+1];
+					i++;
+				} else {
+					klassName = args[i];
+				}
+			}
+			} catch (ArrayIndexOutOfBoundsException e) {
+				System.out.println("il manque une option.");
+			}
+
+		try {
+			Class<?> klass = Class.forName(klassName);
+			GeneratorManager manager = new GeneratorManager(klass,destination,null);
+			manager.runGenerator();
+		} catch (ClassNotFoundException e) {
+			System.out.println("La classe n'a pas ete trouvée dans le classpath.");
+		}
+		
 	}
 
 }
