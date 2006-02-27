@@ -9,11 +9,8 @@ import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 
-import fr.umlv.corba.calculator.proxy.ArithmeticException;
 import fr.umlv.corba.calculator.proxy.CorbaCalculator;
 import fr.umlv.corba.calculator.proxy.CorbaCalculatorHelper;
-import fr.umlv.corba.calculator.proxy.InvalidNumberOfOperators;
-import fr.umlv.corba.calculator.proxy.UnKnowErrorException;
 import fr.umlv.corba.calculator.proxy.ui.GraphicCalculator;
 
 public class Client {
